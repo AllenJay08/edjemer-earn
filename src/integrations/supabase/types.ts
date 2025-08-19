@@ -14,16 +14,389 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          new_values: Json | null
+          old_values: Json | null
+          record_id: string | null
+          table_name: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      benefit_ledger: {
+        Row: {
+          amount: number
+          benefit_type: string
+          created_at: string
+          customer_id: string
+          description: string | null
+          id: string
+          purchase_id: string | null
+        }
+        Insert: {
+          amount: number
+          benefit_type: string
+          created_at?: string
+          customer_id: string
+          description?: string | null
+          id?: string
+          purchase_id?: string | null
+        }
+        Update: {
+          amount?: number
+          benefit_type?: string
+          created_at?: string
+          customer_id?: string
+          description?: string | null
+          id?: string
+          purchase_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benefit_ledger_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "benefit_ledger_purchase_id_fkey"
+            columns: ["purchase_id"]
+            isOneToOne: false
+            referencedRelation: "purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_tiers: {
+        Row: {
+          benefits_multiplier: number
+          commission_rate: number
+          created_at: string
+          id: string
+          is_active: boolean
+          min_purchases: number
+          tier_name: string
+          tier_order: number
+          updated_at: string
+        }
+        Insert: {
+          benefits_multiplier?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          min_purchases?: number
+          tier_name: string
+          tier_order: number
+          updated_at?: string
+        }
+        Update: {
+          benefits_multiplier?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          min_purchases?: number
+          tier_name?: string
+          tier_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          address: string | null
+          created_at: string
+          customer_code: string
+          email: string
+          full_name: string
+          id: string
+          is_active: boolean
+          joined_at: string
+          phone: string | null
+          recruited_by: string | null
+          tier_id: string | null
+          total_benefits: number
+          total_purchases: number
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          customer_code: string
+          email: string
+          full_name: string
+          id?: string
+          is_active?: boolean
+          joined_at?: string
+          phone?: string | null
+          recruited_by?: string | null
+          tier_id?: string | null
+          total_benefits?: number
+          total_purchases?: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          customer_code?: string
+          email?: string
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          joined_at?: string
+          phone?: string | null
+          recruited_by?: string | null
+          tier_id?: string | null
+          total_benefits?: number
+          total_purchases?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_recruited_by_fkey"
+            columns: ["recruited_by"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_tier_id_fkey"
+            columns: ["tier_id"]
+            isOneToOne: false
+            referencedRelation: "customer_tiers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payouts: {
+        Row: {
+          amount: number
+          created_at: string
+          customer_id: string
+          id: string
+          notes: string | null
+          payout_date: string
+          reference_code: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          customer_id: string
+          id?: string
+          notes?: string | null
+          payout_date: string
+          reference_code: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          customer_id?: string
+          id?: string
+          notes?: string | null
+          payout_date?: string
+          reference_code?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payouts_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      purchases: {
+        Row: {
+          amount: number
+          created_at: string
+          customer_id: string
+          id: string
+          processed: boolean
+          product_name: string
+          purchase_code: string
+          purchase_date: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          customer_id: string
+          id?: string
+          processed?: boolean
+          product_name: string
+          purchase_code: string
+          purchase_date?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          customer_id?: string
+          id?: string
+          processed?: boolean
+          product_name?: string
+          purchase_code?: string
+          purchase_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchases_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recruitment_commissions: {
+        Row: {
+          commission_rate: number
+          created_at: string
+          id: string
+          recruited_id: string
+          recruiter_id: string
+          total_earned: number
+          updated_at: string
+        }
+        Insert: {
+          commission_rate: number
+          created_at?: string
+          id?: string
+          recruited_id: string
+          recruiter_id: string
+          total_earned?: number
+          updated_at?: string
+        }
+        Update: {
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          recruited_id?: string
+          recruiter_id?: string
+          total_earned?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recruitment_commissions_recruited_id_fkey"
+            columns: ["recruited_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recruitment_commissions_recruiter_id_fkey"
+            columns: ["recruiter_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role_level: {
+        Args: { _user_id: string }
+        Returns: number
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "super_admin" | "manager" | "viewer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +523,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["super_admin", "manager", "viewer"],
+    },
   },
 } as const
